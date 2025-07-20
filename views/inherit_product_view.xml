@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_dynamic_pricing_view_form" model="ir.ui.view">
+        <field name="name">product.pricing.view.from</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page name="pricing" string="Tarifs">
+                    <group>
+                        <group string="General Info">
+                            <field name="family_id"/>
+                            <field name="units_per_colis"/>
+                            <field name="colis_per_palette"/>
+                        </group>
+                        <group string="Tarifs">
+                            <field name="price_colis"/>
+                            <field name="price_palette"/>
+                            <field name="price_palette_5"/>
+                            <field name="price_palette_10"/>
+                            <field name="price_palette_mix"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
