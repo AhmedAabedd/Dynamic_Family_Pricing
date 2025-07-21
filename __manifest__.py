@@ -12,8 +12,6 @@
                  'sale',
     ],
     'data': ['views/inherit_product_view.xml',
-             'views/product_family_view.xml',
-             'views/inherit_sale_order_view.xml',
              'views/menu.xml',
     ],
     'demo': [],

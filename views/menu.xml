@@ -1,9 +1,9 @@
 <odoo>
 
-    <menuitem id="menu_product_family"
+    <!--<menuitem id="menu_product_family"
               name="Familys"
               parent="sale.product_menu_catalog"
-              action="action_product_family"
-              sequence="100"/>
+              action=""
+              sequence="100"/>-->
 
 </odoo>

@@ -9,7 +9,6 @@ class ProductTemplate(models.Model):
 
 
 
-    family_id = fields.Many2one('product.family', string="Product Family")
     units_per_colis = fields.Float(string="Units Per Colis")
     colis_per_palette = fields.Float(string="Colis per Palette")
 

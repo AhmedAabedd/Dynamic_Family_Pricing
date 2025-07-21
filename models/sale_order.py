@@ -12,11 +12,11 @@ class SaleOrder(models.Model):
     
     def apply_family_pricing(self):
         for order in self:
-            print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            print("//////////// INSIDE apply_family_pricing ////////////////////")
             # step 1: group lines bu family
             lines_by_family = {}
             for line in order.order_line:
-                family = line.product_template_id.family_id
+                family = line.product_template_id.categ_id
                 if not family:
                     continue
                 if family not in lines_by_family:
@@ -29,8 +29,8 @@ class SaleOrder(models.Model):
                 promotion_found = False
 
                 #Initialize unit price to all lines
-                for line in lines:
-                    line.price_unit = line.product_template_id.price_colis
+                #for line in lines:
+                #    line.price_unit = line.product_template_id.price_colis
                 
                 for line in lines:
 
@@ -38,6 +38,13 @@ class SaleOrder(models.Model):
                     colis_per_palette = line.product_template_id.colis_per_palette or 1
 
                     total_qty += selected_qty
+
+                    if line.product_packaging_qty >= 10:
+                        for l in lines:
+                            new_price_unit = line.product_template_id.price_palette
+                            l.price_unit = new_price_unit
+                        promotion_found = True
+                        break
 
                     if selected_qty >= colis_per_palette * 10:
                         for l in lines:
@@ -111,6 +118,5 @@ class SaleOrderLine(models.Model):
 
 
 
-    family_id = fields.Many2one('product.family', related="product_template_id.family_id")
-    line_unit = fields.Char(string="Unit", default="Coli")
+
     
