@@ -24,9 +24,10 @@ class SaleOrder(models.Model):
 
     
     def apply_family_pricing(self):
-        for order in self:
-            print("//////////// INSIDE apply_family_pricing ////////////////////")
-            if order.family_pricing_disabled == False:
+        if self.family_pricing_disabled == False:
+            for order in self:
+                print("//////////// INSIDE apply_family_pricing ////////////////////")
+                
                 # step 1: group lines bu family
                 lines_by_family = {}
                 for line in order.order_line:
@@ -36,7 +37,7 @@ class SaleOrder(models.Model):
                     if family not in lines_by_family:
                         lines_by_family[family] = self.env['sale.order.line']
                     lines_by_family[family] += line
-                
+                    
                 # step 2: Loop through grouped lines and change item price dependying on seleted quantity
                 for family, lines in lines_by_family.items():
 
@@ -46,11 +47,10 @@ class SaleOrder(models.Model):
                     #Initialize unit price to all lines
                     #for line in lines:
                     #    line.price_unit = line.product_template_id.price_colis
-                    
+                        
                     for line in lines:
 
                         selected_qty = line.product_uom_qty
-                        colis_per_palette = line.product_template_id.colis_per_palette or 1
 
                         total_qty += selected_qty
 
@@ -79,13 +79,13 @@ class SaleOrder(models.Model):
                                     l.price_unit = new_price_unit
                                 promotion_found = True
                                 break
-                        
+                            
                     if promotion_found == False:
                         if total_qty >= family.seuil:
                             for l in lines:
                                 new_price_unit = l.product_template_id.price_palette_mix
                                 l.price_unit = new_price_unit
-                        
+                            
                     #if promotion_found == False and total_qty >= 60:
                     #    for l in lines:
                     #        new_price_unit = l.product_template_id.units_per_colis * l.product_template_id.price_palette_mix

@@ -10,12 +10,7 @@
             <xpath expr="//page[@name='general_information']" position="after">
                 <page name="pricing" string="Tarifs">
                     <group>
-                        <group string="General Info">
-                            <field name="units_per_colis"/>
-                            <field name="colis_per_palette"/>
-                        </group>
                         <group string="Tarifs">
-                            <field name="price_colis"/>
                             <field name="price_palette"/>
                             <field name="price_palette_5"/>
                             <field name="price_palette_10"/>
