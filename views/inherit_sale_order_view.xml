@@ -1,0 +1,17 @@
+<odoo>
+
+    <record id="view_inherit_sale_order_promotion_form" model="ir.ui.view">
+        <field name="name">sale.order.inherited</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//group[@name='note_group']" position="before">
+                <group>
+                    <button type="object" name="action_refresh_pricing" string="Refresh Pricing" class="btn-secondary" invisible="family_pricing_disabled == True"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

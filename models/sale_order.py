@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 
@@ -54,38 +55,61 @@ class SaleOrder(models.Model):
 
                         total_qty += selected_qty
 
-                        #INITIALIWE PRICE
+                        #INITIALIZE PRICE
                         line.price_unit = line.product_template_id.list_price
 
-                        if line.product_packaging_id.name == 'Palette':
+                        units_per_colis = None
+                        units_per_palette = None
+                        for packaging in line.product_template_id.packaging_ids:
+                            if packaging.name == 'Colis':
+                                units_per_colis = packaging.qty
+                            elif packaging.name == 'Palette':
+                                units_per_palette = packaging.qty
+                            else:
+                                raise ValidationError(_("Packagings of the product '%s' are not set correctly! "
+                                    "No pricing will be applied until you add the correct packagings."
+                                ) % (line.product_template_id.name))
 
-                            if line.product_packaging_qty >= 10:
-                                for l in lines:
+        
+                        if selected_qty >= units_per_palette * 10:
+                            promotion_found = True
+                            for l in lines:
+                                if l.product_template_id.price_palette_10 != 0.0:
                                     new_price_unit = l.product_template_id.price_palette_10
                                     l.price_unit = new_price_unit
-                                promotion_found = True
-                                break
+                                elif l.product_template_id.price_palette_mix != 0.0:
+                                    new_price_unit = l.product_template_id.price_palette_mix
+                                    l.price_unit = new_price_unit       
+                            break
 
-                            elif line.product_packaging_qty >= 5:
-                                for l in lines:
+                        elif selected_qty >= units_per_palette * 5:
+                            promotion_found = True
+                            for l in lines:
+                                if l.product_template_id.price_palette_5 != 0.0:
                                     new_price_unit = l.product_template_id.price_palette_5
                                     l.price_unit = new_price_unit
-                                promotion_found = True
-                                break
+                                elif l.product_template_id.price_palette_mix != 0.0:
+                                    new_price_unit = l.product_template_id.price_palette_mix
+                                    l.price_unit = new_price_unit
+                            break
 
-                            elif line.product_packaging_qty >= 1:
-                                for l in lines:
+                        elif selected_qty >= units_per_palette:
+                            promotion_found = True
+                            for l in lines:
+                                if l.product_template_id.price_palette != 0.0:
                                     new_price_unit = l.product_template_id.price_palette
                                     l.price_unit = new_price_unit
-                                promotion_found = True
-                                break
-                            
-                    if promotion_found == False:
-                        if total_qty >= family.seuil:
-                            for l in lines:
-                                new_price_unit = l.product_template_id.price_palette_mix
-                                l.price_unit = new_price_unit
-                            
+                                elif l.product_template_id.price_palette_mix != 0.0:
+                                    new_price_unit = l.product_template_id.price_palette_mix
+                                    l.price_unit = new_price_unit
+                            break
+
+
+                    if promotion_found == False and total_qty > family.seuil * units_per_colis and len(lines) > 1:
+                        for l in lines:
+                            new_price_unit = l.product_template_id.price_palette_mix
+                            l.price_unit = new_price_unit
+                                
                     #if promotion_found == False and total_qty >= 60:
                     #    for l in lines:
                     #        new_price_unit = l.product_template_id.units_per_colis * l.product_template_id.price_palette_mix
@@ -117,6 +141,10 @@ class SaleOrder(models.Model):
         for order in self:
             order.family_pricing_applied = True
         self.apply_family_pricing()
+
+    def action_refresh_pricing(self):
+        for order in self:
+            order.apply_family_pricing()
 
 
 
