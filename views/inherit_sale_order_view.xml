@@ -8,7 +8,7 @@
 
             <xpath expr="//group[@name='note_group']" position="before">
                 <group>
-                    <button type="object" name="action_refresh_pricing" string="Refresh Pricing" class="btn-secondary" invisible="family_pricing_disabled == True"/>
+                    <button type="object" name="action_refresh_pricing" string="Apply Pricing" class="btn-secondary" invisible="family_pricing_disabled == True or pricing_apply_when == 'auto'"/>
                 </group>
             </xpath>
         </field>

@@ -15,3 +15,9 @@ class ResConfigSettings(models.TransientModel):
         help="Activate or deactivate the family pricing system",
         config_parameter='dynamic_family_pricing.enable_family_pricing'
     )
+
+    apply_when = fields.Selection([
+        ('auto', 'Modifying Content'),
+        ('button', 'Clicking Button'),
+        ('both', 'Both'),
+    ],default="auto", string="Apply Pricing When", required=True, config_parameter='family_pricing.apply_when')  # This saves to ir.config_parameter

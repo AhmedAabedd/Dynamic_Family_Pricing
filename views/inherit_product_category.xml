@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='packaging_reserve_method']" position="after">
-                <field name="seuil"/>
+                <field name="seuil" invisible="family_pricing_disabled == True"/>
             </xpath>
             
         </field>

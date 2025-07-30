@@ -10,6 +10,9 @@
             <xpath expr="//setting[@id='show_margins']" position="after">
                 <setting id="show_family_pricing" help="Activate or deactivate the family pricing system">
                     <field name="family_pricing_active"/>
+                    <group invisible="family_pricing_active == False">
+                        <field name="apply_when" widget="radio"/>
+                    </group>
                 </setting>
             </xpath>
             

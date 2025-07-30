@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//page[@name='general_information']" position="after">
-                <page name="pricing" string="Tarifs">
+                <page name="pricing" string="Tarifs" invisible="family_pricing_disabled == True">
                     <group>
                         <group string="Tarifs">
                             <field name="price_palette"/>
