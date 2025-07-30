@@ -15,7 +15,6 @@
              'views/inherit_product_category.xml',
              'views/inherit_res_config_settings_view.xml',
              'views/inherit_sale_order_view.xml',
-             'views/menu.xml',
     ],
     'demo': [],
     'qweb': [],

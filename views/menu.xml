@@ -1,9 +1,0 @@
-<odoo>
-
-    <!--<menuitem id="menu_product_family"
-              name="Familys"
-              parent="sale.product_menu_catalog"
-              action=""
-              sequence="100"/>-->
-
-</odoo>

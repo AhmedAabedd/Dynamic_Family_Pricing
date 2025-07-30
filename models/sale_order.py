@@ -130,8 +130,9 @@ class SaleOrder(models.Model):
 
                         if promotion_found == False and total_qty > family.seuil * units_per_colis and len(lines) > 1:
                             for l in lines:
-                                new_price_unit = l.product_template_id.price_palette_mix
-                                l.price_unit = new_price_unit
+                                if l.product_template_id.price_palette_mix != 0.0:
+                                    new_price_unit = l.product_template_id.price_palette_mix
+                                    l.price_unit = new_price_unit
 
 
 
@@ -153,7 +154,7 @@ class SaleOrder(models.Model):
     @api.onchange('order_line')
     def apply_family_pricing_onchange(self):
         for order in self:
-            if order.pricing_apply_when != 'button':
+            if order.family_pricing_disabled == False and order.pricing_apply_when != 'button':
                 order.apply_family_pricing()
     
     
@@ -172,13 +173,14 @@ class SaleOrder(models.Model):
                  )
     def _compute_family_pricing_flag(self):
         for order in self:
-            if order.pricing_apply_when != 'button':
+            if order.family_pricing_disabled == False and order.pricing_apply_when != 'button':
                 order.family_pricing_applied = True
                 order.apply_family_pricing()
 
     def action_refresh_pricing(self):
         for order in self:
-            order.apply_family_pricing()
+            if order.pricing_apply_when != 'auto':
+                order.apply_family_pricing()
 
 
 
