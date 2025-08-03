@@ -69,14 +69,12 @@ class SaleOrder(models.Model):
                     # step 2: Loop through grouped lines and change item price dependying on seleted quantity
                     for family, lines in lines_by_family.items():
 
-                        total_qty = 0
-                        promotion_found = False
+                        total_qty = sum(l.product_uom_qty for l in lines)
+                        promotion_to_apply = ''
                             
                         for line in lines:
 
                             selected_qty = line.product_uom_qty
-
-                            total_qty += selected_qty
 
                             #INITIALIZE PRICE
                             line.price_unit = line.product_template_id.list_price
@@ -88,51 +86,56 @@ class SaleOrder(models.Model):
                                     units_per_colis = packaging.qty
                                 elif packaging.name == 'Palette':
                                     units_per_palette = packaging.qty
-                                else:
-                                    raise ValidationError(_("Packagings of the product '%s' are not set correctly! "
-                                        "No pricing will be applied until you add the correct packagings."
-                                    ) % (line.product_template_id.name))
 
-            
+                            # Check if required packaging values are defined
+                            if units_per_colis is None or units_per_palette is None:
+                                #raise ValidationError(_("Product '%s' is missing required packaging types 'Colis' or 'Palette'. Please configure packaging correctly.") % line.product_template_id.name)
+                                continue
+
                             if selected_qty >= units_per_palette * 10:
-                                promotion_found = True
-                                for l in lines:
-                                    if l.product_template_id.price_palette_10 != 0.0:
-                                        new_price_unit = l.product_template_id.price_palette_10
-                                        l.price_unit = new_price_unit
-                                    elif l.product_template_id.price_palette_mix != 0.0:
-                                        new_price_unit = l.product_template_id.price_palette_mix
-                                        l.price_unit = new_price_unit       
+                                promotion_to_apply = 'palette_10'
                                 break
 
                             elif selected_qty >= units_per_palette * 5:
-                                promotion_found = True
-                                for l in lines:
-                                    if l.product_template_id.price_palette_5 != 0.0:
-                                        new_price_unit = l.product_template_id.price_palette_5
-                                        l.price_unit = new_price_unit
-                                    elif l.product_template_id.price_palette_mix != 0.0:
-                                        new_price_unit = l.product_template_id.price_palette_mix
-                                        l.price_unit = new_price_unit
-                                break
+                                promotion_to_apply = 'palette_5'
 
                             elif selected_qty >= units_per_palette:
-                                promotion_found = True
-                                for l in lines:
-                                    if l.product_template_id.price_palette != 0.0:
-                                        new_price_unit = l.product_template_id.price_palette
-                                        l.price_unit = new_price_unit
-                                    elif l.product_template_id.price_palette_mix != 0.0:
-                                        new_price_unit = l.product_template_id.price_palette_mix
-                                        l.price_unit = new_price_unit
-                                break
+                                if promotion_to_apply == '':
+                                    promotion_to_apply = 'palette'
 
 
-                        if promotion_found == False and total_qty > family.seuil * units_per_colis and len(lines) > 1:
+                        if promotion_to_apply == 'palette_10':
+                            for l in lines:
+                                if l.product_template_id.price_palette_10 != 0.0:
+                                    l.price_unit = l.product_template_id.price_palette_10
+                                elif l.product_template_id.price_palette_5 != 0.0:
+                                    l.price_unit = l.product_template_id.price_palette_5
+                                elif l.product_template_id.price_palette != 0.0:
+                                    l.price_unit = l.product_template_id.price_palette
+                                elif l.product_template_id.price_palette_mix != 0.0:
+                                    l.price_unit = l.product_template_id.price_palette_mix
+
+                        elif promotion_to_apply == 'palette_5':
+                            for l in lines:
+                                if l.product_template_id.price_palette_5 != 0.0:
+                                    l.price_unit = l.product_template_id.price_palette_5
+                                elif l.product_template_id.price_palette != 0.0:
+                                    l.price_unit = l.product_template_id.price_palette
+                                elif l.product_template_id.price_palette_mix != 0.0:
+                                    l.price_unit = l.product_template_id.price_palette_mix
+                        
+                        elif promotion_to_apply == 'palette':
+                            for l in lines:
+                                if l.product_template_id.price_palette != 0.0:
+                                    l.price_unit = l.product_template_id.price_palette
+                                elif l.product_template_id.price_palette_mix != 0.0:
+                                    l.price_unit = l.product_template_id.price_palette_mix
+
+                        # If no promotion was applied, check if total quantity exceeds seuil
+                        elif promotion_to_apply == '' and total_qty > family.seuil * units_per_colis and len(lines) > 1:
                             for l in lines:
                                 if l.product_template_id.price_palette_mix != 0.0:
-                                    new_price_unit = l.product_template_id.price_palette_mix
-                                    l.price_unit = new_price_unit
+                                    l.price_unit = l.product_template_id.price_palette_mix
 
 
 
@@ -181,27 +184,5 @@ class SaleOrder(models.Model):
         for order in self:
             if order.pricing_apply_when != 'auto':
                 order.apply_family_pricing()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
-
-
-
 
     

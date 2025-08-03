@@ -12,10 +12,10 @@ class ProductTemplate(models.Model):
 
     ################### TARIFS ##############################
 
-    price_palette = fields.Float(string="")
-    price_palette_5 = fields.Float(string="")
-    price_palette_10 = fields.Float(string="")
-    price_palette_mix = fields.Float(string="")
+    price_palette = fields.Float(string="Price Palette")
+    price_palette_5 = fields.Float(string="Price Palette 5")
+    price_palette_10 = fields.Float(string="Price Palette 10")
+    price_palette_mix = fields.Float(string="Price Palette Mixte")
 
     #########################################################
 
