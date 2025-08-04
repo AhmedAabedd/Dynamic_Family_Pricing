@@ -132,10 +132,11 @@ class SaleOrder(models.Model):
                                     l.price_unit = l.product_template_id.price_palette_mix
 
                         # If no promotion was applied, check if total quantity exceeds seuil
-                        elif promotion_to_apply == '' and total_qty > family.seuil * units_per_colis and len(lines) > 1:
-                            for l in lines:
-                                if l.product_template_id.price_palette_mix != 0.0:
-                                    l.price_unit = l.product_template_id.price_palette_mix
+                        elif units_per_colis is not None:
+                            if promotion_to_apply == '' and total_qty > family.seuil * units_per_colis and len(lines) > 1:
+                                for l in lines:
+                                    if l.product_template_id.price_palette_mix != 0.0:
+                                        l.price_unit = l.product_template_id.price_palette_mix
 
 
 
