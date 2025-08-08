@@ -59,7 +59,7 @@ class SaleOrder(models.Model):
                     # step 1: group lines bu family
                     lines_by_family = {}
                     for line in order.order_line:
-                        family = line.product_template_id.categ_id
+                        family = line.product_template_id.family_id
                         if not family:
                             continue
                         if family not in lines_by_family:
@@ -173,7 +173,7 @@ class SaleOrder(models.Model):
                  'order_line.product_template_id.price_palette_5',
                  'order_line.product_template_id.price_palette_10',
                  'order_line.product_template_id.price_palette_mix',
-                 'order_line.product_template_id.categ_id.seuil',
+                 'order_line.product_template_id.family_id.seuil',
                  )
     def _compute_family_pricing_flag(self):
         for order in self:

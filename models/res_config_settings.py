@@ -21,3 +21,17 @@ class ResConfigSettings(models.TransientModel):
         ('button', 'Clicking Button'),
         ('both', 'Both'),
     ],default="auto", string="Apply Pricing When", required=True, config_parameter='family_pricing.apply_when')  # This saves to ir.config_parameter
+
+
+
+
+    @api.model
+    def set_values(self):
+        super().set_values()
+
+        menu_main = self.env.ref('dynamic_family_pricing.menu_product_familys', raise_if_not_found=False)
+
+        is_active = self.family_pricing_active
+
+        if menu_main:
+            menu_main.active = is_active

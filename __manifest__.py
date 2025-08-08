@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name' : 'Dynamic Family Pricing',
+    'name' : 'Dynamic Family Pricing.',
     'version' : '1.0',
     'summary': 'Dynamic product\'s Family Pricing',
     'sequence': 10,
@@ -9,12 +9,14 @@
     'category': 'Productivity',
     'website': 'https://www.proosoftcloud.com/',
     'depends' : ['mail',
-                 'sale',
+                 'sale_management',
+                 'stock',
     ],
-    'data': ['views/inherit_product_view.xml',
-             'views/inherit_product_category.xml',
+    'data': ['security/ir.model.access.csv',
+             'views/inherit_product_view.xml',
              'views/inherit_res_config_settings_view.xml',
              'views/inherit_sale_order_view.xml',
+             'views/product_family_view.xml',
     ],
     'demo': [],
     'qweb': [],

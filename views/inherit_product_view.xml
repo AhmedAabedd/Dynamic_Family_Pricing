@@ -4,17 +4,21 @@
     <record id="product_dynamic_pricing_view_form" model="ir.ui.view">
         <field name="name">product.pricing.view.from</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="inherit_id" ref="account.product_template_form_view"/> <!--or product.product_template_form_view-->
         <field name="arch" type="xml">
 
-            <xpath expr="//page[@name='general_information']" position="after">
+            <xpath expr="//page[@name='invoicing']" position="after">
                 <page name="pricing" string="Tarifs" invisible="family_pricing_disabled == True">
                     <group>
-                        <group string="Tarifs">
+                        <group>
+                            <field name="family_id"/>
+                            <field name="family_seuil" invisible="not family_id"/>
+                        </group>
+                        <group>
+                            <field name="price_palette_mix"/>
                             <field name="price_palette"/>
                             <field name="price_palette_5"/>
                             <field name="price_palette_10"/>
-                            <field name="price_palette_mix"/>
                         </group>
                     </group>
                 </page>

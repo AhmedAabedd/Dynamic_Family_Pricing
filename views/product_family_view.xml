@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_product_family_tree" model="ir.ui.view">
+        <field name="name">product.family.tree</field>
+        <field name="model">product.family</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="seuil"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_product_family_form" model="ir.ui.view">
+        <field name="name">product.family.form</field>
+        <field name="model">product.family</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_product" icon="fa-cubes">
+                            <field name="product_count" string="Products" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title mb-3">
+                        <h1>
+                            <label for="name">Family Name</label>
+                            <field name="name" placeholder="e.g. Boissons Gazeuzes"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="seuil"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_product_family" model="ir.actions.act_window">
+        <field name="name">Product Familys</field>
+        <field name="res_model">product.family</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new family !  
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_product_familys"
+        name="Product Familys"
+        parent="sale.prod_config_main"
+        action="action_product_family"
+        sequence="35"
+        active="False"/>
+
+        <!--<menuitem id="prod_config_main"
+                name="Products"
+                sequence="40">
+
+                <menuitem id="menu_product_attribute_action"
+                    action="product.attribute_action"
+                    groups="product.group_product_variant"
+                    sequence="10"/>
+
+                <menuitem
+                    id="menu_product_combos"
+                    name="Combo Choices"
+                    action="product.product_combo_action"
+                    sequence="15"
+                />
+
+                <menuitem id="menu_product_categories"
+                    action="product.product_category_action_form"
+                    sequence="20"/>
+
+                <menuitem id="menu_product_tags"
+                    action="product.product_tag_action"
+                    sequence="30"/>
+
+            </menuitem>-->
+
+</odoo>

@@ -8,14 +8,15 @@ class ProductTemplate(models.Model):
 
 
 
-
+    family_id = fields.Many2one('product.family', string="Family")
+    family_seuil = fields.Float(related="family_id.seuil")
 
     ################### TARIFS ##############################
 
+    price_palette_mix = fields.Float(string="Price Palette Mixte")
     price_palette = fields.Float(string="Price Palette")
     price_palette_5 = fields.Float(string="Price Palette 5")
     price_palette_10 = fields.Float(string="Price Palette 10")
-    price_palette_mix = fields.Float(string="Price Palette Mixte")
 
     #########################################################
 
