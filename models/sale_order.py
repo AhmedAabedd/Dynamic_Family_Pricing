@@ -82,9 +82,9 @@ class SaleOrder(models.Model):
                             units_per_colis = None
                             units_per_palette = None
                             for packaging in line.product_template_id.packaging_ids:
-                                if packaging.name == 'Colis':
+                                if packaging.name.lower() == 'colis':
                                     units_per_colis = packaging.qty
-                                elif packaging.name == 'Palette':
+                                elif packaging.name.lower() == 'palette':
                                     units_per_palette = packaging.qty
 
                             # Check if required packaging values are defined
